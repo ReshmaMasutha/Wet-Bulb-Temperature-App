@@ -1,7 +1,9 @@
 🌡️ Wet Bulb Temperature App
 
 
+
 Welcome to the Wet Bulb Temperature App, an interactive tool designed to raise awareness about heat stress through wet bulb temperature calculations. This app is built using Python and Streamlit, utilizing real-time data from the OpenWeatherMap API.
+
 
 🛠️ Features
 
@@ -15,6 +17,7 @@ Welcome to the Wet Bulb Temperature App, an interactive tool designed to raise a
 
 5.Heat Stress Alerts: Provides users with alerts based on the calculated wet bulb temperature.
 
+
 📊 Project Sections
 
 1.Home Page: Introduction to wet bulb temperature and heat stress.
@@ -27,12 +30,18 @@ Welcome to the Wet Bulb Temperature App, an interactive tool designed to raise a
 
 5.Feedback: Provide feedback on your experience using the app.
 
+
 🧪 How It Works
 
 The app calculates the wet bulb temperature based on temperature, humidity, and pressure data. It visualizes both historical and current weather conditions and allows users to monitor heat stress risk.
 
+
 💻 Tech Stack
+
 1.Python: Core language used for calculations and logic.
+
 2.Streamlit: Framework for creating the app's interactive UI.
+
 3.OpenWeatherMap API: Provides weather data used for calculations.
+
 4.Matplotlib: For data visualization and plotting temperature trends.
