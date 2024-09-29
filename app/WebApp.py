@@ -13,20 +13,17 @@ def wet_bulb_temperature(temp, humidity):
                4.686035
     return wet_temp
 
-# Weather Data Fetching Function
 def fetch_weather(city, api_key):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    api_key = "add7ad83856484eceb2aec51ff88c449" 
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
         return {
             "temperature": data['main']['temp'],
             "humidity": data['main']['humidity'],
-            "description": data['weather'][0]['description'],
-            "wind_speed": data['wind']['speed']
         }
-    else:
-        return None
+    return None
 
 # Function to display the home page
 def home_page():
@@ -86,12 +83,6 @@ def home_page():
 """)
 
 
-    
-    
-
-  
-    
-
 # WET CALCULATOR PAGE
 def calculator_page():
     st.title("Wet Bulb Temperature Calculator")
@@ -109,54 +100,55 @@ def calculator_page():
         else:
             st.success("Wet Bulb Temperature is within safe limits.")
 
+
 # WEATHER INFORMATION PAGE
 def weather_info_page():
     st.title("Weather Information")
-    city = st.text_input(" Enter the city name:")
+    city = st.text_input("Enter the city name:")
     
     # If city is entered, display weather data
     if city:
-        api_key = "add7ad83856484eceb2aec51ff88c449"  # Your OpenWeatherMap API key
+        api_key = "add7ad83856484eceb2aec51ff88c449"  # Using Streamlit's secrets management
         weather_info = fetch_weather(city, api_key)
-        
+
         if weather_info:
             st.write(f"City: {city}")
             st.write(f"**Temperature:** {weather_info['temperature']}°C")
             st.write(f"**Humidity:** {weather_info['humidity']}%")
-            st.write(f"**Weather:** {weather_info['description']}")
-            st.write(f"**Wind Speed:** {weather_info['wind_speed']} m/s")
+            st.write(f"**Wet Bulb Temperature:** {weather_info['wet_bulb']}°C")
         else:
             st.error("City not found. Please enter a valid city name.")
-
-# Fetch weather data from the API
-def fetch_weather(city, api_key):
-    # Adjust the URL for real-time weather data
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        data = response.json()
-        # Extract relevant information
-        temperature = data['main']['temp']
-        humidity = data['main']['humidity']
-
+            
 # Function to fetch weather data
 def fetch_weather(city, api_key):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-    response = requests.get(url)
-    
-    if response.status_code == 200:
-        data = response.json()
-        # Extract temperature and humidity
-        temperature = data['main']['temp']
-        humidity = data['main']['humidity']
+    try:
+        url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+        response = requests.get(url)
         
-        # Calculate wet bulb temperature using an approximation formula
-        wet_bulb = calculate_wet_bulb(temperature, humidity)
-        
-        return {'temperature': temperature, 'humidity': humidity, 'wet_bulb': wet_bulb}
-    else:
+        # Check if the city was found (status code 200)
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Extract temperature and humidity
+            temperature = data['main']['temp']
+            humidity = data['main']['humidity']
+            
+            # Calculate wet bulb temperature using an approximation formula
+            wet_bulb = calculate_wet_bulb(temperature, humidity)
+            
+            return {'temperature': temperature, 'humidity': humidity, 'wet_bulb': wet_bulb}
+        elif response.status_code == 404:
+            # City not found
+            return None
+        else:
+            st.error(f"Error: Unable to retrieve data (status code: {response.status_code})")
+            return None
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
         return None
+
+
+
 
 # Function to calculate wet bulb temperature
 def calculate_wet_bulb(temp, humidity):
@@ -286,19 +278,16 @@ def feedback_page():
 
 # SLIDEBAR FOR NAVIGATION 
 st.sidebar.title("Navigation")
-import streamlit as st
-
 # GitHub repository link
 github_url = "https://github.com/reshmamasutha/wet-bulb-temperature-app"
 
 # Display the clickable GitHub icon in the center of the page
-st.markdown(f"""
-    <div style="text-align:center;">
-        <a href="{github_url}" target="_blank">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" style="width:40px;">
-        </a>
-    </div>
+st.sidebar.markdown(f"""
+    <a href="{github_url}" target="_blank">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" style="width:30px;">
+    </a>
     """, unsafe_allow_html=True)
+
 
 page = st.sidebar.radio("Go to", ["🏠 Homepage", "🧮 Wet Bulb Temperature Calculator", "🌤️ Weather Info For Cities", "📊 Historical Data Visualisation", "🔥 Heat Stress Alert", "📝 Feedback"])
 
@@ -314,3 +303,4 @@ elif page == "🔥 Heat Stress Alert":
     alerts_page()
 elif page == "📝 Feedback":
     feedback_page()
+    
