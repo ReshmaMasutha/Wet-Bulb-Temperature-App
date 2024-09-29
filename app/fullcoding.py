@@ -266,18 +266,8 @@ def feedback_page():
 
 # SLIDEBAR FOR NAVIGATION 
 st.sidebar.title("Navigation")
-
-# GitHub repository link
-github_url = "https://github.com/reshmamasutha/wet-bulb-temperature-app"
-
-# Display the clickable GitHub icon in the center of the page
-st.markdown(f"""
-    <div style="text-align:center;">
-        <a href="{github_url}" target="_blank">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" style="width:40px;">
-        </a>
-    </div>
-    """, unsafe_allow_html=True)
+st.sidebar.header("Links")
+st.sidebar.markdown("[Wet-Bulb-Temperature](https://github.com/ReshmaMasutha/Wet-Bulb-Temperature)")
 page = st.sidebar.radio("Go to", ["🏠 Homepage", "🧮 Wet Bulb Temperature Calculator", "🌤️ Weather Info For Cities", "📊 Historical Data Visualisation", "🔥 Heat Stress Alert", "📝 Feedback"])
 
 if page == "🏠 Homepage":
