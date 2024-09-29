@@ -1,6 +1,6 @@
 streamlit
 pandas
-plotly
+matplotlib
 requests 
 datetime
 
