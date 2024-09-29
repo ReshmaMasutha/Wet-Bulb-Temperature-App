@@ -128,7 +128,6 @@ def weather_info_page():
         else:
             st.error("City not found. Please enter a valid city name.")
 
-
 # Fetch weather data from the API
 def fetch_weather(city, api_key):
     # Adjust the URL for real-time weather data
@@ -140,9 +139,6 @@ def fetch_weather(city, api_key):
         # Extract relevant information
         temperature = data['main']['temp']
         humidity = data['main']['humidity']
-        # Calculate wet bulb temperature (simplified calculation)
-import math
-import requests
 
 # Function to fetch weather data
 def fetch_weather(city, api_key):
@@ -170,30 +166,6 @@ def calculate_wet_bulb(temp, humidity):
          + 0.00391838 * (humidity ** 1.5) * math.atan(0.023101 * humidity) \
          - 4.686035
     return round(tw, 2)
-
-# Streamlit weather info display
-def weather_info():
-    st.title("Weather Information")
-    city = st.text_input("Enter the city name:")
-
-    # If city is entered, display weather data
-    if city:
-        api_key = "add7ad83856484eceb2aec51ff88c449"  # Your OpenWeatherMap API key
-        weather_info = fetch_weather(city, api_key)
-        
-        if weather_info:
-            st.write(f"**City:** {city}")
-            st.write(f"**Temperature:** {weather_info['temperature']}°C")
-            st.write(f"**Humidity:** {weather_info['humidity']}%")
-            st.write(f"**Wet Bulb Temperature:** {weather_info['wet_bulb']}°C")
-        else:
-            st.error("City not found. Please enter a valid city name.")
-
-# Streamlit app entry point
-if __name__ == "__main__":
-    weather_info()
-
-
 
 # Visualization Page
 def visualization_page():
