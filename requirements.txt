@@ -1,0 +1,7 @@
+streamlit
+math
+pandas
+plotly
+requests 
+datetime
+
