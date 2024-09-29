@@ -120,17 +120,19 @@ def weather_info_page():
         weather_info = fetch_weather(city, api_key)
         
         if weather_info:
-            st.write(f"** City:** {city}")
+            st.write(f"City: {city}")
             st.write(f"**Temperature:** {weather_info['temperature']}°C")
             st.write(f"**Humidity:** {weather_info['humidity']}%")
             st.write(f"**Weather:** {weather_info['description']}")
             st.write(f"**Wind Speed:** {weather_info['wind_speed']} m/s")
         else:
             st.error("City not found. Please enter a valid city name.")
-# Function to fetch weather data
-def fetch_weather(date, city, api_key):
-    # Adjust the URL according to the OpenWeatherMap API documentation
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&date={date}&appid={api_key}&units=metric"
+
+
+# Fetch weather data from the API
+def fetch_weather(city, api_key):
+    # Adjust the URL for real-time weather data
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
     response = requests.get(url)
     
     if response.status_code == 200:
@@ -138,15 +140,40 @@ def fetch_weather(date, city, api_key):
         # Extract relevant information
         temperature = data['main']['temp']
         humidity = data['main']['humidity']
-        # Calculate wet bulb temperature using a formula or function (as a placeholder here)
-        wet_bulb = temperature - ((100 - humidity) / 5)  # Simplified calculation
-        return {'date': date, 'temperature': temperature, 'humidity': humidity, 'wet_bulb': wet_bulb}
+        # Calculate wet bulb temperature (simplified calculation)
+import math
+import requests
+
+# Function to fetch weather data
+def fetch_weather(city, api_key):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        # Extract temperature and humidity
+        temperature = data['main']['temp']
+        humidity = data['main']['humidity']
+        
+        # Calculate wet bulb temperature using an approximation formula
+        wet_bulb = calculate_wet_bulb(temperature, humidity)
+        
+        return {'temperature': temperature, 'humidity': humidity, 'wet_bulb': wet_bulb}
     else:
         return None
 
+# Function to calculate wet bulb temperature
+def calculate_wet_bulb(temp, humidity):
+    tw = temp * math.atan(0.151977 * math.sqrt(humidity + 8.313659)) \
+         + math.atan(temp + humidity) \
+         - math.atan(humidity - 1.676331) \
+         + 0.00391838 * (humidity ** 1.5) * math.atan(0.023101 * humidity) \
+         - 4.686035
+    return round(tw, 2)
 
+# Visualization Page
 def visualization_page():
-    st.title("Historical Data Visualization")
+    st.title("📊 Historical Data Visualization")
 
     # Input for date and city
     date_input = st.date_input("Select Date:", datetime.now())
@@ -155,14 +182,14 @@ def visualization_page():
 
     if st.button("Get Weather Info"):
         if city_input:
-            # Format date to string
+            # Format date to string (though OpenWeatherMap API doesn't support historical by date in free tier)
             selected_date = date_input.strftime("%Y-%m-%d")
-            weather_data = fetch_weather(selected_date, city_input, api_key)
+            weather_data = fetch_weather(city_input, api_key)
 
             if weather_data:
                 # Create a DataFrame to store the fetched data
                 data = {
-                    'Date': [weather_data['date']],
+                    'Date': [selected_date],
                     'Temperature': [weather_data['temperature']],
                     'Humidity': [weather_data['humidity']],
                     'Wet Bulb': [weather_data['wet_bulb']]
@@ -173,9 +200,9 @@ def visualization_page():
                 st.write(df)
 
                 # Plotting historical temperature and wet bulb temperature
-                st.write("### Temperature vs Wet Bulb Temperature")
+                st.write("### 🌡️ Temperature vs Wet Bulb Temperature")
                 fig, ax = plt.subplots()
-                
+
                 # Create a scatter plot for clearer visualization
                 ax.scatter(df['Date'], df['Temperature'], label='Temperature', color='blue', marker='o')
                 ax.scatter(df['Date'], df['Wet Bulb'], label='Wet Bulb Temperature', color='red', marker='s')
@@ -185,18 +212,15 @@ def visualization_page():
                 ax.set_ylabel('Temperature (°C)')
                 
                 # Customize title and legend
-                ax.set_title('Temperature vs Wet Bulb Temperature Over Time')
+                ax.set_title('Temperature vs Wet Bulb Temperature')
                 ax.legend()
 
                 # Display the plot in Streamlit
                 st.pyplot(fig)
             else:
-                st.error("No weather data found for the specified date and city.")
+                st.error("Weather data not found. Please try again with a valid city.")
         else:
             st.error("Please enter a city name.")
-
-
-
 
 
 # HEAT STRESS ALERTS PAGE
@@ -266,6 +290,8 @@ def feedback_page():
 
 # SLIDEBAR FOR NAVIGATION 
 st.sidebar.title("Navigation")
+import streamlit as st
+
 # GitHub repository link
 github_url = "https://github.com/reshmamasutha/wet-bulb-temperature-app"
 
@@ -277,6 +303,7 @@ st.markdown(f"""
         </a>
     </div>
     """, unsafe_allow_html=True)
+
 page = st.sidebar.radio("Go to", ["🏠 Homepage", "🧮 Wet Bulb Temperature Calculator", "🌤️ Weather Info For Cities", "📊 Historical Data Visualisation", "🔥 Heat Stress Alert", "📝 Feedback"])
 
 if page == "🏠 Homepage":
