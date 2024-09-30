@@ -267,15 +267,14 @@ def alerts_page():
 
 # FEEDBACK FORM
 def feedback_page():
-    st.title("Feedback")
-    feedback = st.text_area("Please leave your feedback here:")
-
-    if st.button("Submit Feedback"):
-        if feedback:
-            st.success("Thank you for your feedback!")
-        else:
-            st.error("Feedback cannot be empty.")
-
+    st.title("Feedback Form")
+    st.write("We value your feedback! Please fill out the form below to provide your comments and suggestions.")
+    
+    # Replace with your Google Form link
+    google_form_url = "https://forms.gle/BbVVTY3UGYgZCwDm9"
+    
+    # Embed Google Form in Streamlit
+    st.markdown(f'<iframe src="{google_form_url}" width="640" height="700" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>', unsafe_allow_html=True)
 # SLIDEBAR FOR NAVIGATION 
 st.sidebar.title("Navigation")
 # GitHub repository link
