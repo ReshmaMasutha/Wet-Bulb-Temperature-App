@@ -81,6 +81,16 @@ def home_page():
 - **Historical Data Visualization**: Users can view graphs of historical WBT trends, helping them understand the changing climate patterns in their area.  
 - **Health and Safety Alerts**: The app provides warnings when WBT exceeds dangerous levels (e.g., **35°C**), encouraging users to take precautions.
 """)
+    st.title("Wet Bulb Temperature App")
+    
+    # Your app content (e.g., weather info, feedback, etc.)
+    
+    # Footer for credits
+    st.write("---")  # Horizontal line for separation
+    st.write("### Credits")
+    st.write("Weather data provided by [OpenWeatherMap](https://openweathermap.org/).")
+    st.write("Developed by Reshma Masutha A.")
+    
 
 
 # WET CALCULATOR PAGE
